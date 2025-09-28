@@ -25,11 +25,13 @@ import PayLinkButton from "@/components/PayLinkButton";
 import { useAuth } from "@/components/context/AuthContext";
 import type { Productcustom, ProductStandard } from "@/components/PaymentModal";
 import { useNavigate } from "react-router";
+import { usePayment } from "@/components/context/MerchantPaymentContext";
 
 
 
 export default function PaymentsGenerateDashboard() {
     const {merchant} = useMerchantSetup()
+    const {createPOSQuery} = usePayment()
     const {wallet, loggedin} = useAuth()
     console.log(wallet)
     const navigate = useNavigate()
@@ -68,6 +70,7 @@ export default function PaymentsGenerateDashboard() {
         }
 
  useEffect(()=>{
+    if (loggedin) createPOSQuery()
     if (!loggedin){
         navigate('/')
     }

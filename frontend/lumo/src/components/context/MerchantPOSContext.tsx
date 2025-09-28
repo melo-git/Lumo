@@ -69,8 +69,33 @@ export function POSSetupProvider({ children }: { children: React.ReactNode }) {
       
 
       const responseData: POSResponse = await res.json()
+
+      // Fetch all available terminals
+      if (responseData) {
+        try {
+          const res = await fetch(`${backendUrl}/api/terminal`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Optionally add Authorization header if needed
+          Authorization: `Token ${token}`
+        },
+
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch terminals: ${res.status}`);
+        }
+        const POSData: POSResponse = await res.json()
+        setPOS(POSData);
+
+      }
+        catch(err: any) {
+      console.error("Create merchant error:", err);
+      setError(err.message || "Something went wrong");
+      }
+    }
       console.log(responseData)
-      setPOS(responseData);
+      
       
       console.log(responseData)
     } catch (err: any) {

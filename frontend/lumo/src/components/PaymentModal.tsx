@@ -148,30 +148,39 @@ const recipient = new PublicKey(product.wallet);
 
 
   const qrServiceUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(encodedUrl.href)}&format=png&margin=2`;
+  
   const toPOS = async() => {
-    try {
-      const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/payment-link`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Optionally add Authorization header if needed
-          //Authorization: `Token ${token}`
-        },
-        body: JSON.stringify(data),
-      });
+  try {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-      if (!res.ok) {
-        throw new Error(`Failed to create merchant: ${res.status}`);
-      }
+  const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/code-link`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Optionally add Authorization header if needed
+      //Authorization: `Token ${token}`
+    },
+    body: JSON.stringify(data),
+    signal: controller.signal, // attach AbortController
+  });
 
-      const responseData = await res.json();
-      //setPOS(responseData);
-    } catch (err: any) {
-      console.error("Create merchant error:", err);
-      //setError(err.message || "Something went wrong");
-    } finally {
-      //setLoading(false);
-    }
+  clearTimeout(timeoutId); // cancel timeout if request finishes in time
+
+  if (!res.ok) {
+    throw new Error(`Failed to send payment data to POS: ${res.status}`);
+  }
+
+  const responseData = await res.json();
+  //setPOS(responseData);
+} catch (err: any) {
+  if (err.name === "AbortError") {
+    console.error("Request timed out after 10 seconds");
+  } else {
+    console.error("Create merchant error:", err);
+  }
+  //setError(err.message || "Something went wrong");
+}
   }
 
  
@@ -278,30 +287,40 @@ const recipient = new PublicKey(product.wallet);
 
 
   const toPOS = async() => {
-    try {
-      const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/code-link`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Optionally add Authorization header if needed
-          //Authorization: `Token ${token}`
-        },
-        body: JSON.stringify(data),
-      });
+try {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-      if (!res.ok) {
-        throw new Error(`Failed to create merchant: ${res.status}`);
-      }
+  const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/code-link`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Optionally add Authorization header if needed
+      //Authorization: `Token ${token}`
+    },
+    body: JSON.stringify(data),
+    signal: controller.signal, // attach AbortController
+  });
 
-      const responseData = await res.json();
-      setSent(true)
-      //setPOS(responseData);
-    } catch (err: any) {
-      console.error("Create merchant error:", err);
-      //setError(err.message || "Something went wrong");
-    } finally {
-      //setLoading(false);
-    }
+  clearTimeout(timeoutId); // cancel timeout if request finishes in time
+
+  if (!res.ok) {
+    throw new Error(`Failed to send payment data to POS: ${res.status}`);
+  }
+
+  const responseData = await res.json();
+
+  setSent(true);
+  //setPOS(responseData);
+} catch (err: any) {
+  if (err.name === "AbortError") {
+    console.error("Request timed out after 10 seconds");
+  } else {
+    console.error("Create merchant error:", err);
+  }
+  //setError(err.message || "Something went wrong");
+}
+
   }
  const [copied, setCopied] = useState(false);
  

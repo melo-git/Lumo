@@ -1,33 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Home,
-  Box,
-  Cpu,
-  Repeat,
-  Wallet,
-  PackageCheck,
-  FileText,
-  Users,
-  User,
-  LogOut,
-  ChevronRight,
-  CreditCard,
-  Archive,
-  BarChart2,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SidePanel from '../components/SidePanel'
 import { useMerchantSetup } from "@/components/context/MerchantSetupContext";
-import { usePOSSetup, type POSData } from "@/components/context/MerchantPOSContext";
-import { data } from "react-router";
-import { usePayment, type POSQueryResponse } from "@/components/context/MerchantPaymentContext";
+import { usePOSSetup, type POSData, type POSResponse } from "@/components/context/MerchantPOSContext";
 
 export default function MerchantDashboard() {
   const {merchant} = useMerchantSetup()
-  const {POS, createPOS, loading} = usePOSSetup()
-  const {POSQuery, createPOSQuery} = usePayment()
+  const {POS, createPOS,} = usePOSSetup()
+  //const {POSQuery, createPOSQuery} = usePayment()
 
-  const [terminals, setTerminals] = useState<[POSQueryResponse|null]>([POSQuery]);
+  const [terminals, setTerminals] = useState<[POSResponse|null]>([POS]);
   
 
   const [form, setForm] = useState({
@@ -35,10 +17,7 @@ export default function MerchantDashboard() {
     model_type: "",
   });
 
-  useEffect(()=>{
-    createPOSQuery()
-    setTerminals([POSQuery])
-  },[])
+  
 
 
   
@@ -56,6 +35,11 @@ export default function MerchantDashboard() {
     }
     
   };
+
+  useEffect(()=>{
+    setTerminals([POS])
+    
+  },[createPOS])
 
   return (
     <div className="min-h-screen flex bg-[#fff7fb] text-slate-900">
@@ -122,7 +106,7 @@ export default function MerchantDashboard() {
                   <tr key={idx}>
                     <td className="border border-pink-300 px-4 py-2">{t?.device_serial_id}</td>
                     <td className="border border-pink-300 px-4 py-2">{t?.model_type}</td>
-                    <td className="border border-pink-300 px-4 py-2">{t.}</td>
+                    <td className="border border-pink-300 px-4 py-2">{t?.registration_date.toString()}</td>
                     <td className="border border-pink-300 px-4 py-2">{t?.status}</td>
                     <td className="border border-pink-300 px-4 py-2">
                       {t?.status === "Active" ? (

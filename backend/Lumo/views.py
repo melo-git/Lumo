@@ -63,11 +63,11 @@ class TerminalQueryView(generics.CreateAPIView):
             date=today
         ).only("pk").exists()
 
-        if exists:
-            return Response(
-                {"message": "IP address already logged today"},
-                status=status.HTTP_200_OK
-            )
+        #if exists:
+            #return Response(
+                #{"message": "IP address already logged today"},
+                #status=status.HTTP_200_OK
+            #)
 
         terminal_query = models.TerminalQuery.objects.create(
             terminal= _terminal,
