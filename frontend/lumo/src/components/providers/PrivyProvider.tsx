@@ -1,10 +1,8 @@
-"use client";
-
 import { PrivyProvider } from "@privy-io/react-auth";
 import { SolanaProviderClient } from "./SolanaProvider";
 import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";
 import { createSolanaRpc, createSolanaRpcSubscriptions } from "gill";
-import {Connection} from '@solana/web3.js'
+//import {Connection} from '@solana/web3.js'
 
 const privyAppId = import.meta.env.VITE_PRIVY_APP_ID || "";
 
@@ -14,7 +12,7 @@ const rpcUrl =
   import.meta.env.PUBLIC_SOLANA_RPC_URL ||
   "https://api.mainnet-beta.solana.com";
 
-  const connection = new Connection(rpcUrl, "confirmed");
+  //const connection = new Connection(rpcUrl, "confirmed");
 
 if (!privyAppId) {
   throw new Error("VITE_PRIVY_ID environment variable is required");

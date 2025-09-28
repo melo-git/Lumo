@@ -1,5 +1,3 @@
-"use client";
-
 import { createSolanaClient } from "gill";
 import { SolanaProvider } from "@gillsdk/react";
 
