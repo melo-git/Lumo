@@ -44,7 +44,7 @@ export function MerchantSetupProvider({ children }: { children: React.ReactNode 
     
  if (userType === 'Merchant'){
     const getMerchant = async ()=> {try {
-      const res = await fetch(`${backendUrl}/api/merchant/${id}`, {
+      const res = await fetch(`${backendUrl}api/merchant/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -43,7 +43,7 @@ export function MerchantSetupProvider({ children }: { children: React.ReactNode 
     setError(null);
 
     try {
-      const res = await fetch(`${backendUrl}/api/merchants/`, {
+      const res = await fetch(`${backendUrl}api/merchants/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

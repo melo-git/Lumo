@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePrivy, useLogin, useLogout } from "@privy-io/react-auth";
-import {useWallets} from '@privy-io/react-auth';
 //import { ConnectedStandardSolanaWallet } from "@privy-io/react-auth/solana";
-import {toSolanaWalletConnectors, type SolanaStandardWallet} from '@privy-io/react-auth/solana';
 
 
 const backendUrl = import.meta.env.VITE_LUMO_BACKEND_URL || 'http://localhost:8000'
@@ -68,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAccessToken(privyToken)
           if (privyToken) {
             setLoggedIn(true)
-            const res = await fetch(`${backendUrl}/api/login`, {
+            const res = await fetch(`${backendUrl}api/login`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${privyToken}`,
