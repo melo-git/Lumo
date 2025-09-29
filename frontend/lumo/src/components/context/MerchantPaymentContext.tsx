@@ -55,6 +55,7 @@ export function MerchantPaymentProvider({ children }: { children: React.ReactNod
       }
 
       const data = await res.json()
+      console.log(data)
       const ip_addr_used: URL = new URL(data.ip_addr_used)
 
       const responseData: POSQueryResponse = {...data, ip_addr_used:ip_addr_used};

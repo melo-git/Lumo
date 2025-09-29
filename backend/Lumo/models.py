@@ -117,7 +117,7 @@ class TerminalQuery(models.Model):
     user_agent = models.TextField()
 
     def __str__(self):
-        return self.terminal
+        return self.terminal.device_serial_id
 
 
 

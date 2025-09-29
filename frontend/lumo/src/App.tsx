@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { useState } from "react";
 import { Suspense } from "react";
-import { BrowserRouter } from "react-router";
+import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./routes/AppRoutes";
 import { AuthProvider } from './components/context/AuthContext.tsx'
 import Providers from "./components/providers/PrivyProvider";

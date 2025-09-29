@@ -29,8 +29,8 @@ app_secret = env['PRIVY_APP_SECRET']
 JWKS = f'https://auth.privy.io/api/v1/apps/{app_id}/jwks.json'
 
 
-# endpoint: terminal/address
-class TerminalQueryView(generics.CreateAPIView):
+# endpoint: terminal/address-log
+class TerminalQueryView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = serializers.TerminalQuerySerializer  # ensure this matches your serializer
 
     def create(self, request, *args, **kwargs):
