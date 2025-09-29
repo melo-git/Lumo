@@ -39,7 +39,7 @@ export function MerchantPaymentProvider({ children }: { children: React.ReactNod
     setError(null);
 
     try {
-      const res = await fetch(`${backendUrl}api/terminal/address-query?merchant_id=${merchant?.id}&date=${date}`, {
+      const res = await fetch(`${backendUrl}/api/terminal/address-query?merchant_id=${merchant?.id}&date=${date}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

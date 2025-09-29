@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAccessToken(privyToken)
           if (privyToken) {
             setLoggedIn(true)
-            const res = await fetch(`${backendUrl}api/login`, {
+            const res = await fetch(`${backendUrl}/api/login`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${privyToken}`,

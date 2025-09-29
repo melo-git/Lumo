@@ -51,7 +51,7 @@ export function POSSetupProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const res = await fetch(`${backendUrl}api/terminal`, {
+      const res = await fetch(`${backendUrl}/api/terminal`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
