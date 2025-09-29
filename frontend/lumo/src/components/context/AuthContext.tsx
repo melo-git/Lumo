@@ -63,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             //console.log(_wallets)
           
           const privyToken = await getAccessToken();
+          console.log(privyToken)
           setAccessToken(privyToken)
           if (privyToken) {
             setLoggedIn(true)
@@ -79,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             const data = await res.json();
             console.log(data)
+
 
             // Assume backend returns { token: "...", user: {...} }
             setToken(data.auth_token);
