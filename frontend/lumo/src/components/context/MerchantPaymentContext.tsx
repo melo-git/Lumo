@@ -8,7 +8,7 @@ const backendUrl = import.meta.env.VITE_LUMO_BACKEND_URL || 'http://localhost:80
 export interface POSQueryResponse {
   id: string;
   terminal: string;
-  ip_addr_used: URL;
+  ip_addr_used: string;
   model_type: string | undefined;
   user_agent: string;
 
@@ -56,9 +56,10 @@ export function MerchantPaymentProvider({ children }: { children: React.ReactNod
 
       const data = await res.json()
       console.log(data)
-      const ip_addr_used: URL = new URL(data[0].ip_addr_used)
+      const ip_addr= data[0].ip_addr_used
+      console.log(ip_addr)
 
-      const responseData: POSQueryResponse = {...data[0], ip_addr_used:ip_addr_used};
+      const responseData: POSQueryResponse = {...data[0], ip_addr_used:ip_addr};
       setPOSQuery(responseData);
     } catch (err: any) {
       console.error("Getting POS query error:", err);
