@@ -5,7 +5,7 @@ import {useWallets} from '@privy-io/react-auth';
 import {toSolanaWalletConnectors, type SolanaStandardWallet} from '@privy-io/react-auth/solana';
 
 
-const backendUrl = import.meta.env.LUMO_BACKEND_URL || 'http://localhost:8000'
+const backendUrl = import.meta.env.VITE_LUMO_BACKEND_URL || 'http://localhost:8000'
 
 interface AuthContextType {
   id: Number|null;

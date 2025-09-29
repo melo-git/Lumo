@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router";
 
-const backendUrl = import.meta.env.LUMO_BACKEND_URL || 'http://localhost:8000'
+const backendUrl = import.meta.env.VITE_LUMO_BACKEND_URL || 'http://localhost:8000'
 
 
 interface MerchantData {
