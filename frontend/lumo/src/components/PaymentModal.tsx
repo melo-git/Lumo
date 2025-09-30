@@ -6,7 +6,10 @@ import {  encodeURL, type TransferRequestURLFields, findReference, validateTrans
 import { Connection, PublicKey, Keypair } from "@solana/web3.js";
 import BigNumber from "bignumber.js";
 import { usePayment } from "./context/MerchantPaymentContext";
+import { useAuth } from "./context/AuthContext";
+import { useMerchantSetup } from "./context/MerchantSetupContext";
 
+const backendUrl = import.meta.env.VITE_LUMO_BACKEND_URL
 
 export interface ProductStandard {
   name: string;
@@ -142,7 +145,10 @@ const recipient = new PublicKey(product.wallet);
   const txDetails: TransferRequestURLFields = txxDetails
   const encodedUrl = encodeURL(txDetails)
 
-  const data = {"pay_link":encodedUrl.href}
+  //const data = {"pay_link":encodedUrl.href}
+  const {token} = useAuth();
+
+  const {merchant} = useMerchantSetup()
 
   const {POSQuery} = usePayment()
 
@@ -154,16 +160,20 @@ const recipient = new PublicKey(product.wallet);
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-  const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/code-link`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // Optionally add Authorization header if needed
-      //Authorization: `Token ${token}`
-    },
-    body: JSON.stringify(data),
-    signal: controller.signal, // attach AbortController
-  });
+   const res = await fetch(`${backendUrl}/api/send-paylink/`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,   // for DRF Token Auth
+    // OR: "Authorization": `Bearer ${jwtToken}`
+  },
+  body: JSON.stringify({
+    esp32_url: `http://${POSQuery?.ip_addr_used}/api/code-link`,
+    pay_link: encodedUrl.href,   // e.g. "solana:..."
+    merchant_id: merchant?.id
+
+  }),
+});
 
   clearTimeout(timeoutId); // cancel timeout if request finishes in time
 
@@ -276,7 +286,10 @@ const recipient = new PublicKey(product.wallet);
   const txDetails: TransferRequestURLFields = txxDetails
   const encodedUrl = encodeURL(txDetails)
 
-  const data = {"pay_link":encodedUrl}
+ 
+  const {token} = useAuth();
+
+  const {merchant} = useMerchantSetup()
 
   const {POSQuery} = usePayment()
 
@@ -291,16 +304,20 @@ try {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-  const res = await fetch(`http://${POSQuery?.ip_addr_used}/api/code-link`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // Optionally add Authorization header if needed
-      //Authorization: `Token ${token}`
-    },
-    body: JSON.stringify(data),
-    signal: controller.signal, // attach AbortController
-  });
+  const res = await fetch(`${backendUrl}/api/send-paylink/`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Token ${token}`,   // for DRF Token Auth
+    // OR: "Authorization": `Bearer ${jwtToken}`
+  },
+  body: JSON.stringify({
+    esp32_url: `http://${POSQuery?.ip_addr_used}/api/code-link`,
+    pay_link: encodedUrl.href,   // e.g. "solana:..."
+    merchant_id: merchant?.id
+
+  }),
+});
 
   clearTimeout(timeoutId); // cancel timeout if request finishes in time
 
