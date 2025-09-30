@@ -160,7 +160,7 @@ const recipient = new PublicKey(product.wallet);
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-   const res = await fetch(`${backendUrl}/api/send-paylink/`, {
+   const res = await fetch(`${backendUrl}/api/send-paylink`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -304,7 +304,7 @@ try {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000); // 10 seconds
 
-  const res = await fetch(`${backendUrl}/api/send-paylink/`, {
+  const res = await fetch(`${backendUrl}/api/send-paylink`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
