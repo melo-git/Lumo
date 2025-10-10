@@ -1,6 +1,7 @@
 
 import {useEffect, useState} from "react";
 import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card,
      CardContent,
@@ -40,32 +41,30 @@ export default function PaymentsGenerateDashboard() {
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState("");
   const [availability, setAvailability] = useState("");
-  const [coin, setCoin] = useState("sol");
-  const [paywallet, setPayWallet] = useState("");
+  const [coin, setCoin] = useState("SOL");
+  const [paywallet, setPayWallet] = useState<string|null>(wallet);
 
   const [customName, setCustomName] = useState("");
   const [customQuantity, setCustomQuantity] = useState(1);
   const [customMessage, setCustomMessage] = useState("");
-  const [customCoin, setCustomCoin] = useState("sol");
-  const [customWallet, setCustomWallet] = useState("");
-   const [itemPrice, setItemPrice] = useState(10);
+   const [itemPrice, setItemPrice] = useState("10.00");
    
    const customPaymentData: Productcustom ={
             name:customName,
-            price:itemPrice,
+            price:Number(itemPrice),
             quantity:customQuantity,
             message:customMessage,
-            coin:customCoin,
-            wallet:wallet,
+            coin:coin,
+            wallet:paywallet,
             type:'custom'
         }
     const paymentData: ProductStandard ={
             name:productName,
-            price:itemPrice, // an API call to pull the price of stored products
+            price:Number(itemPrice), // an API call to pull the price of stored products
             quantity:quantity,
             message:message,
             coin:coin,
-            wallet:wallet,
+            wallet:paywallet,
             type:'standard'
         }
 
@@ -157,24 +156,25 @@ export default function PaymentsGenerateDashboard() {
             <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-2 justify-center">
               <Label htmlFor="coin">Coin or token</Label>
-              <Select value={coin} onValueChange={setCoin}>
+              <Select value={coin} onValueChange={(e) => {setCoin(e)}}>
                 <SelectTrigger className="border border-pink-300">
                   <SelectValue placeholder="Coin or token" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sol">SOL</SelectItem>
-                  <SelectItem value="usdc">USDC</SelectItem>
+                  <SelectItem value="SOL">SOL</SelectItem>
+                  <SelectItem value="USDC">USDC</SelectItem>
+                  <SelectItem value="USDT">USDT</SelectItem>
                 </SelectContent>
               </Select>
               </div>
               <div className="flex flex-col gap-2 justify-center">
               <Label htmlFor="wallet">Select preferred wallet address</Label>
-              <Select value={paywallet} onValueChange={setPayWallet}>
+              <Select onValueChange={setPayWallet}>
                 <SelectTrigger className="border border-pink-300">
                   <SelectValue placeholder="Select preferred wallet address" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={wallet}>{wallet}</SelectItem>
+                  <SelectItem value={wallet? wallet: ''}>{wallet}</SelectItem>
                   {/*<SelectItem value="wallet2">4Fd...K92M</SelectItem>*/}
                 </SelectContent>
               </Select>
@@ -235,11 +235,11 @@ export default function PaymentsGenerateDashboard() {
               />
               </div>
               <div className="flex flex-col gap-2 justify-center">
-                <Label htmlFor="item-price">Item price (USD)</Label>
+                <Label htmlFor="item-price">Item price ({coin})</Label>
               <Input 
               id="item-price" 
               type="text"
-                value={itemPrice} onChange={(e) => setItemPrice(Number(e.target.value))}
+                value={itemPrice} onChange={(e) => setItemPrice(e.target.value)}
                 className="border border-pink-300"
                 />
                 </div>
@@ -249,24 +249,25 @@ export default function PaymentsGenerateDashboard() {
             <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-2 justify-center">
               <Label htmlFor="coin">Coin or token</Label>
-              <Select value={customCoin} onValueChange={setCustomCoin}>
+              <Select value={coin} onValueChange={(e) => {setCoin(e)}}>
                 <SelectTrigger className="border border-pink-300">
                   <SelectValue placeholder="Coin or token" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sol">SOL</SelectItem>
-                  <SelectItem value="usdc">USDC</SelectItem>
+                <SelectContent >
+                  <SelectItem value="SOL">SOL</SelectItem>
+                  <SelectItem value="USDC">USDC</SelectItem>
+                  <SelectItem value="USDT">USDT</SelectItem>
                 </SelectContent>
               </Select>
               </div>
               <div className="flex flex-col gap-2 justify-center">
               <Label htmlFor="wallet">Select preferred wallet address</Label>
-              <Select value={customWallet} onValueChange={setCustomWallet}>
+              <Select onValueChange={setPayWallet}>
                 <SelectTrigger className="border border-pink-300">
                   <SelectValue placeholder="Select preferred wallet address" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={wallet}>{wallet}</SelectItem>
+                  <SelectItem value={wallet?wallet:""}>{wallet}</SelectItem>
                   {/*<SelectItem value="wallet2">4Fd...K92M</SelectItem>*/}
                 </SelectContent>
               </Select>

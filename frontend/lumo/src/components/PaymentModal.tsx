@@ -17,7 +17,7 @@ export interface ProductStandard {
   quantity: number;
    message:string|null;
   coin: string;
-  wallet:string;
+  wallet:string|null;
   type:string;
 
   //imageUrl: string;
@@ -29,7 +29,7 @@ export interface Productcustom {
   quantity: number;
   message: string|null;
   coin: string;
-  wallet:string|string;
+  wallet:string|null;
   type:string;
 
   //imageUrl: string;
@@ -47,20 +47,33 @@ type QRCodeStylingType = new (options: any) => {
 // RPC connection (devnet by default). Swap to mainnet RPC for production.
 const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
+const token = {
+  "USDT": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "USDC": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" // test USDC "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"
+}
 
 
-const txDetails = (product: ProductStandard|Productcustom) => {
 
+
+
+const txFields = (paymentData:ProductStandard|Productcustom):TransferRequestURLFields => {
+  const product = paymentData
+const recipient = product.wallet? new PublicKey(product.wallet): new Keypair().publicKey;// replace with custom wallet
+  let txxDetails:TransferRequestURLFields = {recipient};
+  
   if (product.type === 'standard'){
-    const recipient = new PublicKey(product.wallet);
+    const recipient = product.wallet? new PublicKey(product.wallet): new Keypair().publicKey
     const amount = new BigNumber(product.price);
+    const splToken = product.coin !== "SOL"? product.coin === "USDT"? new PublicKey(token.USDT):new PublicKey(token.USDC): undefined;
     const reference = new Keypair().publicKey;
     const label = product.name;
     const message = product.message||`${product.name} purchase`;
+    
 
-    return {
+     txxDetails= {
       recipient,
       amount,
+      splToken,
       reference,
       label,
       message,
@@ -68,23 +81,25 @@ const txDetails = (product: ProductStandard|Productcustom) => {
     
   }
   else if (product.type==='custom'){
-    const recipient = new PublicKey(product.wallet);
+    const recipient =  product.wallet? new PublicKey(product.wallet): new Keypair().publicKey;
     const amount = new BigNumber(product.price*product.quantity);
+    const splToken = product.coin !== "SOL"? product.coin === "USDT"? new PublicKey(token.USDT):new PublicKey(token.USDC): undefined;
+
     const reference = new Keypair().publicKey;
     const label = product.name;
     const message = product.message||`${product.name} purchase`;
 
-    return {
+    txxDetails = {
       recipient,
       amount,
+      splToken,
       reference,
       label,
       message,
     }
   }
-  
- 
-  }
+  return txxDetails
+}
 
 
 
@@ -106,43 +121,9 @@ export const QRCodeModal: React.FC<QRModalProps> = ({ open, onClose, paymentData
 
     
 
-const product = paymentData
-const recipient = new PublicKey(product.wallet);
-  let txxDetails:TransferRequestURLFields = {recipient};
-  
-  if (product.type === 'standard'){
-    const recipient = new PublicKey((product.wallet));
-    const amount = new BigNumber(product.price);
-    const reference = new Keypair().publicKey;
-    const label = product.name;
-    const message = product.message||`${product.name} purchase`;
-    
 
-     txxDetails= {
-      recipient,
-      amount,
-      reference,
-      label,
-      message,
-    }
-  }
-  else if (product.type==='custom'){
-    const recipient = new PublicKey(product.wallet);
-    const amount = new BigNumber(product.price*product.quantity);
-    const reference = new Keypair().publicKey;
-    const label = product.name;
-    const message = product.message||`${product.name} purchase`;
 
-    txxDetails = {
-      recipient,
-      amount,
-      reference,
-      label,
-      message,
-    }
-  }
-
-  const txDetails: TransferRequestURLFields = txxDetails
+  const txDetails: TransferRequestURLFields = txFields(paymentData)
   const encodedUrl = encodeURL(txDetails)
 
   //const data = {"pay_link":encodedUrl.href}
@@ -247,44 +228,9 @@ export const PaymentLinkModal: React.FC<LinkModalProps> = ({ open, onClose, paym
   const [QRCodeStylingComponent, setQRCodeStylingComponent] =
     useState<QRCodeStylingType | null>(null);
 
-const product = paymentData
-const recipient = new PublicKey(product.wallet);
-  let txxDetails:TransferRequestURLFields = {recipient};
-  
-  if (product.type === 'standard'){
-    const recipient = new PublicKey(product.wallet);
-    const amount = new BigNumber(product.price);
-    const reference = new Keypair().publicKey;
-    const label = product.name;
-    const message = product.message||`${product.name} purchase`;
-    
-
-     txxDetails= {
-      recipient,
-      amount,
-      reference,
-      label,
-      message,
-    }
-  }
-  else if (product.type==='custom'){
-    const recipient = new PublicKey(product.wallet);
-    const amount = new BigNumber(product.price*product.quantity);
-    const reference = new Keypair().publicKey;
-    const label = product.name;
-    const message = product.message||`${product.name} purchase`;
-
-    txxDetails = {
-      recipient,
-      amount,
-      reference,
-      label,
-      message,
-    }
-  }
-
-  const txDetails: TransferRequestURLFields = txxDetails
+const txDetails: TransferRequestURLFields = txFields(paymentData)
   const encodedUrl = encodeURL(txDetails)
+  console.log(encodedUrl.href)
 
  
   const {token} = useAuth();

@@ -14,17 +14,19 @@ from . import serializers
 import jwt, requests
 from django.utils.timezone import now
 from datetime import datetime
+import datetime as dt
 from . import _permissions
+import os
 
 
 import dotenv
 
-env = dotenv.dotenv_values('.env')
+dotenv.load_dotenv('.env')
 
 
-app_id = env['PRIVY_APP_ID']
+app_id = os.getenv('PRIVY_APP_ID')
 
-app_secret = env['PRIVY_APP_SECRET']
+#app_secret = env['PRIVY_APP_SECRET']
 
 JWKS = f'https://auth.privy.io/api/v1/apps/{app_id}/jwks.json'
 
@@ -116,20 +118,37 @@ def privy_login(request):
         return JsonResponse({"error": "Missing token"}, status=400)
 
     token = auth_header.split(" ")[1]
+    print(app_id)
+    print(token)
+    print("Server time:", datetime.now(dt.timezone.utc))
 
     try:
+        # --- get public key dynamically ---
+        signing_key = jwt.PyJWKClient(JWKS).get_signing_key_from_jwt(token).key
+
+        # --- decode token with 30s leeway for clock skew ---
         decoded = jwt.decode(
             token,
+            key=signing_key,
+            algorithms=["ES256"],
             options={"verify_aud": False},
-            key=jwt.PyJWKClient(JWKS).get_signing_key_from_jwt(token).key,
-            algorithms=['ES256']
+            leeway=30  # <-- allow 30s skew
         )
+
+        print("Token iat:", datetime.fromtimestamp(decoded["iat"], tz=dt.timezone.utc))
+
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({"error": "Token has expired"}, status=401)
+    except jwt.ImmatureSignatureError:
+        return JsonResponse({"error": "Token is not yet valid (check server clock)"}, status=401)
     except Exception as e:
         return JsonResponse({"error": f"Invalid token: {str(e)}"}, status=401)
+
 
     # Extract user info from Privy JWT
     privy_id = decoded.get("sub")  # permanent ID
     #wallet_address = request.data.get("wallet_address")
+    print(privy_id)
 
     # 1. Get or create Django User
     user, user_created = User.objects.get_or_create(
@@ -223,14 +242,14 @@ class CustomerDetailView(generics.RetrieveUpdateAPIView):
 
 class TerminalView(generics.ListCreateAPIView):
     serializer_class = serializers.TerminalSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [_permissions.IsMerchantOwner, IsAuthenticated]
 
     def get_queryset(self):
         # Only show terminals owned by the current merchant
         return (
             models.Terminal.objects
             .select_related("merchant")
-            .filter(merchant__user=self.request.user)  # restrict by logged-in user
+            #.filter(merchant=self.request.user)  # restrict by logged-in user
         )
 
 class TerminalDetailView(generics.RetrieveUpdateAPIView):

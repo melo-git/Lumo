@@ -71,12 +71,12 @@ export default function MerchantDashboard() {
               )}
               <input type="file" className="hidden" onChange={handleImageUpload} />
             </label>
-            <button
+            {/*<button
               type="button"
               className="mt-3 px-4 py-2 bg-pink-200 text-pink-700 rounded-lg text-sm"
             >
               Upload image
-            </button>
+            </button>*/}
           </div>
 
           {/* Inputs */}

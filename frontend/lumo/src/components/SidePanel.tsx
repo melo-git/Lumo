@@ -16,8 +16,9 @@ import {
   ArrowRightLeft,
   ChartNoAxesColumn,
   User,
+  ChevronDown,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Link, redirect, useNavigate } from "react-router";
 import type { MerchantResponse } from "./context/MerchantSetupContext";
 import { useAuth } from "./context/AuthContext";
 
@@ -44,7 +45,7 @@ export default function MerchantDashboard(
 
     
     const pageNavigator = (link:string) => {
-        navigate("/"+ link)
+        navigate(`/${link}`)
     }
   const menu = [
       { label: "Home", icon: Home, active: parentName === "Home" || false, chevron: false, link:"dashboard" },
@@ -55,6 +56,7 @@ export default function MerchantDashboard(
             active: parentName === "Products" || false,
             chevron: true ,
             link: "dashboard/products/add",
+            baseLink: "dashboard/products",
             children: [
               { label: "Add product", icon: PackagePlus, childActive:childName === "Add product" || false,
                 link:"dashboard/products/add"
@@ -80,6 +82,7 @@ export default function MerchantDashboard(
             active: parentName === "Payments" || false,
             chevron: true ,
             link: "dashboard/payment/generate",
+            baseLink: "dashboard/payment",
             children: [
               { label: "Generate payment", icon: QrCode, childActive:childName === "Generate payment" || false,
                 link:"dashboard/payment/generate"
@@ -98,6 +101,7 @@ export default function MerchantDashboard(
             active: parentName === "Inventory" || false,
             chevron: true ,
             link:"dashboard/inventory/add",
+            baseLink: "dashboard/inventory",
             children: [
               { label: "Add inventory", icon: PackagePlus, childActive:childName === "Add inventory" || false,
                 link:"dashboard/inventory/add"
@@ -110,7 +114,7 @@ export default function MerchantDashboard(
       },
 
 
-      { label: "Analytics", icon: ChartNoAxesColumn, chevron: false, link:"dashboard/analytics" },
+      { label: "Analytics", icon: ChartNoAxesColumn, chevron: false, link:"dashboard/analytics", baseLink: "dashboard/analytics" },
 
 
       {
@@ -119,6 +123,7 @@ export default function MerchantDashboard(
             active: parentName === "Staff management" || false,
             chevron: true ,
             link:"dashboard/staff/add",
+            baseLink: "dashboard/staff",
             children: [
               { label: "Add staff", icon: Users, childActive:childName === "Add staff" || false,
                 link:"dashboard/staff/add",
@@ -136,6 +141,7 @@ export default function MerchantDashboard(
             active: parentName === "Account" || false,
             chevron: true ,
             link:"dashboard/account/profile",
+            baseLink: "dashboard/account",
             children: [
               { label: "Profile", icon: User, childActive:childName === "Profile" || false,
                 link:"dashboard/account/profile",
@@ -153,11 +159,12 @@ export default function MerchantDashboard(
         <>
         {/* Left Sidebar */}
 
-        <aside className="w-72 bg-gradient-to-b from-pink-200 to-pink-100 border-r border-pink-300 p-6 flex flex-col">
+        <aside className="w-72 bg-[_rgba(204,21,178,0.1)]
+ border-r border-pink-300 p-6 flex flex-col">
                 <div className="flex items-center gap-4">
                   {/*Avater <div className="w-12 h-12 bg-black rounded-full" />*/}
                   <div>
-                    <div className="text-lg font-mono">{merchant?.business_name||"business_name"}</div>
+                    <div className="text-lg font-mono px-3">{merchant?.business_name||"business_name"}</div>
                   </div>
                 </div>
         
@@ -166,27 +173,29 @@ export default function MerchantDashboard(
                     {menu.map((m) => (
                                   <li key={m.label}>
                                     <div>
+                                      <Link to={`/${m.link}`} key={m.label}>
                                       <button
                                       onClick={() => {pageNavigator(m.link)}}
-                                        className={`w-full flex items-center gap-4 text-left cursor-pointer rounded-xl px-3 py-2 transition-all hover:bg-pink-100/60 ${
-                                          m.active ? "bg-pink-300/50 shadow-sm" : ""
+                                        className={`w-full flex text-[#666666] items-center gap-4 text-left cursor-pointer px-3 py-2 transition-all hover:bg-[#C70CCE]/43 hover:text-white ${
+                                          m.active ? "bg-[#C70CCE]/43 shadow-sm text-white" : ""
                                         }`}
                                       >
                                         <m.icon strokeWidth={1} className="w-5 h-5" />
                                         <span className="flex-1">{m.label}</span>
-                                        {m.children && <ChevronRight className="w-4 h-4 opacity-60" />}
+                                        {m.children && ( m.active?<ChevronDown className="w-4 h-4 opacity-60 text-white" />:<ChevronRight className="w-4 h-4 opacity-60" />)}
                                       </button>
+                                      </Link>
                                       {m.children && m.label === parentName && m.active && (
                                         <ul className="ml-10 mt-2 space-y-2">
                                           {m.children.map((child) => (
                                             <li key={child.label}>
                                               <button
-                                                className={`w-full flex items-center gap-3 text-left rounded-lg px-2 py-1 transition-all hover:bg-pink-100/60 ${
-                                                  child.childActive ? "bg-pink-300/50 shadow-sm" : ""
+                                                className={`w-full text-[#666666] flex items-center gap-3 text-left px-3 py-2 transition-all hover:bg-pink-100/60 ${
+                                                  child.childActive ? "bg-[_rgba(255,255,255,0.35)]" : ""
                                                 }`}
                                               >
-                                                <child.icon strokeWidth={1} className="w-4 h-4" />
-                                                <span>{child.label}</span>
+                                                <child.icon strokeWidth={1} className={`w-4 h-4 ${child.childActive ? "" : ""}`} />
+                                                <span><a href={`/${child.link}`}>{child.label}</a></span>
                                               </button>
                                             </li>
                                           ))}

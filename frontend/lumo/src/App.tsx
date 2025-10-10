@@ -22,24 +22,26 @@ const App: React.FC = () => {
 
   return (
     <Providers>
+      <BrowserRouter>
         <AuthProvider>
           
           <MerchantSetupProvider>
             <MerchantPaymentProvider>
           <POSSetupProvider>
             
-          <BrowserRouter>
+          
       
             <Suspense fallback={<LoadingScreen />}>
               <AppRoutes />
             </Suspense>
-            </BrowserRouter>
+            
           
           </POSSetupProvider>
           </MerchantPaymentProvider>
           </MerchantSetupProvider>
           
         </AuthProvider>
+        </BrowserRouter>
       </Providers>
     );
   }

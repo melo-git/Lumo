@@ -6,10 +6,10 @@ import { usePOSSetup, type POSData, type POSResponse } from "@/components/contex
 
 export default function MerchantDashboard() {
   const {merchant} = useMerchantSetup()
-  const {POS, createPOS,} = usePOSSetup()
+  const {POS, createPOS, getPos, createdPOS} = usePOSSetup()
   //const {POSQuery, createPOSQuery} = usePayment()
 
-  const [terminals, setTerminals] = useState<[POSResponse|null]>([POS]);
+  const [terminals, setTerminals] = useState(POS);
   
 
   const [form, setForm] = useState({
@@ -17,7 +17,8 @@ export default function MerchantDashboard() {
     model_type: "",
   });
 
-  
+//getPos()
+
 
 
   
@@ -37,12 +38,26 @@ export default function MerchantDashboard() {
   };
 
   useEffect(()=>{
-    setTerminals([POS])
+    if (merchant){
+      getPos()
+      setTerminals(POS)
+    }
     
-  },[createPOS])
+  },[])
+
+  /*useEffect(()=>{
+    if (createdPOS){
+      getPos()
+      setTerminals(POS)
+    }
+  
+    
+  },[createdPOS])*/
+  console.log(terminals)
+  
 
   return (
-    <div className="min-h-screen flex bg-[#fff7fb] text-slate-900">
+    <div className="min-h-screen flex bg-[#fff7fb] text-slate-900" >
       {/* Sidebar */}
       <SidePanel parentName={"POS terminals"} childName={null} merchant={merchant}/>
       {/* Main content */}
@@ -96,18 +111,18 @@ export default function MerchantDashboard() {
                   <th className="border border-pink-300 px-4 py-2 text-left">Terminal</th>
                   <th className="border border-pink-300 px-4 py-2 text-left">Model</th>
                   <th className="border border-pink-300 px-4 py-2 text-left">Reg. date</th>
-                  <th className="border border-pink-300 px-4 py-2 text-left">Date</th>
+                  {/*<th className="border border-pink-300 px-4 py-2 text-left">Date</th>*/}
                   <th className="border border-pink-300 px-4 py-2 text-left">Status</th>
                 </tr>
               </thead>
               <tbody>
                 
-                {terminals.map((t, idx) => (
+                {terminals?.map((t:any, idx:any) => (
                   <tr key={idx}>
                     <td className="border border-pink-300 px-4 py-2">{t?.device_serial_id}</td>
                     <td className="border border-pink-300 px-4 py-2">{t?.model_type}</td>
-                    <td className="border border-pink-300 px-4 py-2">{t?.registration_date.toString()}</td>
-                    <td className="border border-pink-300 px-4 py-2">{t?.status}</td>
+                    <td className="border border-pink-300 px-4 py-2">{t?.registration_date}</td>
+                    {/*<td className="border border-pink-300 px-4 py-2">{t?.status}</td>*/}
                     <td className="border border-pink-300 px-4 py-2">
                       {t?.status === "Active" ? (
                         <span className="text-green-600 flex items-center gap-1">

@@ -25,7 +25,7 @@ export interface MerchantResponse {
 }
 
 interface MerchantSetupContextType {
-  merchant: MerchantResponse | null;
+  merchant: any | null;
   loading: boolean;
   error: string | null;
   createMerchant: (data: MerchantData) => void;
@@ -35,14 +35,28 @@ const MerchantSetupContext = createContext<MerchantSetupContextType | undefined>
 
 export function MerchantSetupProvider({ children }: { children: React.ReactNode }) {
 //const navigate = useNavigate()
-  const {token, userType, id} = useAuth();
-  const [merchant, setMerchant] = useState<MerchantResponse | null>(null);
+  const {token, userType, id, loggedin} = useAuth();
+  console.log(id, loggedin, userType)
+  const [merchant, setMerchant] = useState<any|null>(JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):null }`));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  //const navigate = useNavigate()
+
+   useEffect(() => {
+    if (!loggedin) return; 
+    if (loggedin) {
+      setMerchant(
+        JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):null }`)
+      )
+      }
+  }, [loggedin]);
+
  useEffect(() => {
     
- if (userType === 'Merchant'){
+ if (userType === 'Merchant' &&
+   !JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):null }`))
+   {
     const getMerchant = async ()=> {try {
       const res = await fetch(`${backendUrl}/api/merchant/${id}`, {
         method: "GET",
@@ -59,7 +73,8 @@ export function MerchantSetupProvider({ children }: { children: React.ReactNode 
       }
 
       const responseData: MerchantResponse = await res.json();
-      setMerchant(responseData);
+      localStorage.setItem("merchant", JSON.stringify(responseData))
+      setMerchant(JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):null }`));
       console.log(responseData);
     } catch (err: any) {
       console.error("Create merchant error:", err);
@@ -70,7 +85,11 @@ export function MerchantSetupProvider({ children }: { children: React.ReactNode 
 }
 getMerchant()
   };
- }, [userType])
+ }, [
+  userType,
+  JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):null }`)
+
+ ]);
   
 
   const createMerchant =  async (data: MerchantData) =>  {
@@ -93,7 +112,8 @@ getMerchant()
       }
 
       const responseData: MerchantResponse = await res.json();
-      setMerchant(responseData);
+      localStorage.setItem("merchant", JSON.stringify(responseData))
+      setMerchant(JSON.parse(`${localStorage.getItem("merchant")? localStorage.getItem("merchant"):"{}" }`));
       console.log(responseData);
     } catch (err: any) {
       console.error("Create merchant error:", err);
