@@ -48,17 +48,27 @@ useEffect(() => {
 
 }, [userType])
 
+const goToDashboard = ()=> {
+  navigate('/dashboard')
+}
+
   return (
     
     <div className="min-h-screen flex flex-col bg-[rgba(255, 255, 255, 1)] bg-[rgba(199,12,206,0.04)] text-gray-800">
       {/* Navbar */}
       <header className="flex justify-between items-center p-6 shadow-md shadow-fuchsia-600/6">
         <h1 className="text-2xl font-bold text-gradient">Lumo</h1>
-        {loggedin ? (<Button onClick={_logout} variant="outline" className="border-[#C70CCE] border-b-[7px] border-t-[2px]
-        border-l-[2px] border-r-[2px] text-[#C70CCE] hover:bg-pink-100 hover:text-gray-400">
+        {loggedin ? (<div className="flex gap-2">
+          <Button onClick={goToDashboard} variant="outline" className="border-[#C70CCE] text-[#C70CCE] hover:shadow-md shadow-[#C70CCE] hover:border-white hover:bg-[#C70CCE] hover:cursor-pointer hover:text-white">
+          Dashboard
+        </Button>
+          <Button onClick={_logout} variant="outline" className="border-[#C70CCE] border-b-[7px] border-t-[2px]
+        border-l-[2px] border-r-[2px] text-[#C70CCE] hover:shadow-md hover:shadow-[#C70CCE] hover:bg-[#C70CCE] hover:text-white hover:cursor-pointer">
           Log out
-        </Button>): (<Button onClick={() =>{_login(); setBtn(true)}} variant="outline" className="border-[#C70CCE] border-b-[7px] border-t-[2px]
-        border-l-[2px] border-r-[2px] text-[#C70CCE] hover:bg-pink-100 hover:text-gray-400">
+        </Button> 
+        </div>): 
+        (<Button onClick={() =>{_login(); setBtn(true)}} variant="outline" className="border-[#C70CCE] border-b-[7px] border-t-[2px]
+        border-l-[2px] border-r-[2px] text-[#C70CCE] hover:bg-[#C70CCE] hover:shadow-md hover:shadow-[#C70CCE] hover:text-white hover:cursor-pointer">
           Login/Sign up
         </Button>)}
       </header>
