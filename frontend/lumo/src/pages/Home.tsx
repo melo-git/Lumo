@@ -87,7 +87,7 @@ const goToDashboard = ()=> {
         </h3>
         <p className="text-gray-500 mt-4">With No Fear. No Trust Issues.</p>
 
-        <Button onClick={_login} className="mt-6 bg-pink-500 hover:bg-pink-600 text-white px-20 py-3 rounded-xl shadow">
+        <Button onClick={_login} className="mt-6 bg-[#C70CCE] hover:bg-[#C70CCE] text-white px-20 py-3 rounded-xl shadow">
           Login/Sign up
         </Button>
 
