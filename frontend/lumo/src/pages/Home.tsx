@@ -121,7 +121,7 @@ const goToDashboard = ()=> {
         <FeatureCard
           icon={<img src={P2P} className="w-8 h-8 color-[#C70CCE] text-[#C70CCE]" />}
           title="P2P POS system For Cash, Coin Or Token Transactions"
-          text="Leverage AI to generate insights and track expenses. Merchants get analytics to grow, users get spending insights."
+          text="Need cash for expenses? Transfer tokens to a Lumo vendor and get instant cash. Or swap coins/tokens quickly for fiat."
           button="Start making P2P transactions"
           login = {_login}
         />
@@ -129,7 +129,7 @@ const goToDashboard = ()=> {
         <FeatureCard
           icon={<Brain className="w-8 h-8 text-[#C70CCE]" />}
           title="AI-Powered Business And Spending Analytics"
-          text="Need cash for expenses? Transfer tokens to a Lumo vendor and get instant cash. Or swap coins/tokens quickly for fiat."
+          text="Leverage AI to generate insights and track expenses. Merchants get analytics to grow, users get spending insights."
           button="Login/Sign up"
           login = {_login}
         />
