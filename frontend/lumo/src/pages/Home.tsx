@@ -54,7 +54,7 @@ const goToDashboard = ()=> {
 
   return (
     
-    <div className="min-h-screen w-screen flex flex-col bg-[rgba(255, 255, 255, 1)] bg-[rgba(199,12,206,0.04)] text-gray-800">
+    <div className="min-h-screen w-full flex flex-col bg-[rgba(255, 255, 255, 1)] bg-[rgba(199,12,206,0.04)] text-gray-800">
       {/* Navbar */}
       <header className="flex justify-between items-center p-6 shadow-md shadow-fuchsia-600/6">
         <h1 className="text-2xl font-bold text-gradient">Lumo</h1>
