@@ -119,7 +119,7 @@ const goToDashboard = ()=> {
         />
 
         <FeatureCard
-          icon={<img src={P2P} className="w-8 h-8 color-[#C70CCE]" />}
+          icon={<img src={P2P} className="w-8 h-8 color-[#C70CCE] text-[#C70CCE]" />}
           title="P2P POS system For Cash, Coin Or Token Transactions"
           text="Leverage AI to generate insights and track expenses. Merchants get analytics to grow, users get spending insights."
           button="Start making P2P transactions"
