@@ -38,7 +38,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
            appearance: {
             theme: "#1a1a1a",
             walletChainType: "solana-only",
-            walletList: ['detected_solana_wallets',],
+            walletList: ['detected_solana_wallets','wallet_connect',],
           },
           
           externalWallets: {
