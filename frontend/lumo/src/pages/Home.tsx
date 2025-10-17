@@ -163,7 +163,7 @@ type FeatureCardProps = {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text, button, login }) => (
   <Card className="bg-[rgba(255, 255, 255, 1)] bg-[rgba(199,12,206,0.01)] border-[#C70CCE]/30
-  shadow-[0_2px_3.4px_0.1px_#C70CCE]/70 px-6 pt-5 pb-8 rounded-sm"  >
+  shadow-[0_2px_3.4px_0.1px_#C70CCE]/70 pt-5 pb-8 rounded-sm"  >
     <CardContent className="flex flex-col gap-4">
       <div className="flex items-center justify-center w-15 h-15 rounded-full 
       bg-[rgba(199,12,206,0.06)]  ">
