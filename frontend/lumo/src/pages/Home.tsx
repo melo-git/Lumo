@@ -82,7 +82,7 @@ const goToDashboard = ()=> {
         <h2 className="text-3xl font-bold mt-2">
           Your Crypto POS System
         </h2>
-        <h3 className="text-xl font-bold text-red-600 mt-2">
+        <h3 className="text-xl font-bold text-[#FFC0CB] mt-2">
           For Everyday Physical Business and Spending.
         </h3>
         <p className="text-gray-500 mt-4">With No Fear. No Trust Issues.</p>
